@@ -25,4 +25,12 @@ export const removePlayer = (socketId: string) => {
     players = players.filter((player) => player.s_id !== socketId);
 };
 
+export const setRoles = () => {
+    if(players[0].role === "waiting"){
+        players.map(player => {
+            
+        })
+    }
+}
+
 export { players };

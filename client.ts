@@ -7,6 +7,7 @@ const socket = io('http://localhost:6000');
 let players: Player[] = [];
 let s_id: string | null = null;
 let player: Player | undefined = undefined;
+let username = '';
 
 socket.on('gameFull', (payload) => {
     console.log('Game full, try again later');
@@ -15,15 +16,17 @@ socket.on('gameFull', (payload) => {
 socket.on('getPlayers', (payload) => {
     players = payload.players;
 
-    if (!s_id) {
-        s_id = payload.s_id;
-    }
+    if (username) {
+        if (!s_id) {
+            s_id = payload.s_id;
+        }
 
-    if (!player) {
-        player = players.find((p) => p.s_id === s_id);
+        if (!player) {
+            player = players.find((p) => p.s_id === s_id);
+        } else if (player) {
+            console.log(`${players.length}/10 players online`);
+        }
     }
-
-    console.log(`${players.length}/10 players online`);
 });
 
 socket.on('gameStarted', (payload) => {
@@ -36,7 +39,7 @@ socket.on('gameStarted', (payload) => {
 });
 
 const main = async () => {
-    const username = await input('Enter your username: ');
+    username = await input('Enter your username: ');
 
     socket.emit('join', { username });
 };

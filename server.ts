@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-import { playerJoin, players, removePlayer } from './logic/player';
+import { playerJoin, players, removePlayer, setRoles } from './logic/player';
 import { Server } from 'socket.io';
 
 dotenv.config();
@@ -20,10 +20,12 @@ server.on('connection', (socket) => {
         playerJoin(username, socket.id);
 
         if (players.length >= 5) {
-            server.emit('gameStarted', true);
+            setRoles();
+
+            server.emit('gameStarted', { players, s_id: socket.id });
         }
 
-        server.emit('getPlayers', players);
+        server.emit('getPlayers', { players, s_id: socket.id });
     });
 
     socket.on('disconnect', () => {

@@ -1,3 +1,4 @@
+import { shuffle } from '../utils/shuffleArray';
 import { Player } from '../types/player';
 
 let players: Player[] = [];
@@ -26,11 +27,28 @@ export const removePlayer = (socketId: string) => {
 };
 
 export const setRoles = () => {
-    if(players[0].role === "waiting"){
-        players.map(player => {
-            
-        })
+    if (players[0].role === 'waiting') {
+        players = shuffle(players).map((player: Player) => {
+            if (
+                players.filter(
+                    (p) =>
+                        p.role === 'mafia' ||
+                        p.role === 'doctor' ||
+                        p.role === 'police'
+                ).length >= 3
+            ) {
+                player.role = 'default';
+            } else if (!players.find((p) => p.role === 'mafia')) {
+                player.role = 'mafia';
+            } else if (!players.find((p) => p.role === 'police')) {
+                player.role = 'police';
+            } else if (!players.find((p) => p.role === 'doctor')) {
+                player.role = 'doctor';
+            }
+
+            return player;
+        });
     }
-}
+};
 
 export { players };

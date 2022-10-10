@@ -1,6 +1,6 @@
-export interface Player{
+export interface Player {
     s_id: string;
     username: string;
     dead: boolean;
-    role: string;
+    role: 'waiting' | 'doctor' | 'mafia' | 'default' | "police";
 }
